@@ -21,8 +21,9 @@ services:
       - EU_SERVER_UUID=${EU_SERVER_UUID}
     volumes:
       - ./config/config.json:/etc/xray/config.json:ro
+      - ./entrypoint.sh:/entrypoint.sh:ro
       - xray-logs:/var/log/xray
-    command: ["/bin/sh", "-c", "envsubst < /etc/xray/config.json > /tmp/config.json && xray run -c /tmp/config.json"]
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
 
 volumes:
   xray-logs:
