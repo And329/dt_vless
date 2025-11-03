@@ -49,6 +49,86 @@ if [ ! -z "$TROJAN_PASSWORD" ]; then
     echo -e "${GREEN}✓${NC} Trojan: $OUTPUT_DIR/trojan.txt"
 fi
 
+# SSH Tunnel (Maximum Stealth)
+echo ""
+echo -e "${GREEN}✓${NC} SSH Tunnel commands: $OUTPUT_DIR/ssh-tunnel.txt"
+
+cat > "$OUTPUT_DIR/ssh-tunnel.txt" <<EOF
+SSH Tunnel Connection (Maximum Stealth)
+========================================
+
+Server: $SERVER_IP
+Port: 22 (SSH)
+
+OPTION 1: SOCKS5 Proxy (Easiest - works with all apps)
+-------------------------------------------------------
+Linux/Mac:
+  ssh -D 1080 -f -C -q -N vpnuser@$SERVER_IP
+
+Windows (Command Prompt):
+  plink.exe -D 1080 -C -N vpnuser@$SERVER_IP
+
+Then configure your browser/apps to use SOCKS5 proxy:
+  Address: 127.0.0.1
+  Port: 1080
+
+
+OPTION 2: Port Forward + VLESS Client
+--------------------------------------
+Forward VLESS port through SSH tunnel:
+
+Linux/Mac:
+  ssh -L 8443:localhost:443 -f -C -q -N vpnuser@$SERVER_IP
+
+Windows (Command Prompt):
+  plink.exe -L 8443:localhost:443 -C -N vpnuser@$SERVER_IP
+
+Then configure your VLESS client to connect to:
+  Address: localhost (or 127.0.0.1)
+  Port: 8443
+  UUID: $VLESS_UUID
+
+
+OPTION 3: Port Forward + Shadowsocks Client
+--------------------------------------------
+Forward Shadowsocks port through SSH tunnel:
+
+Linux/Mac:
+  ssh -L 9943:localhost:9443 -f -C -q -N vpnuser@$SERVER_IP
+
+Windows (Command Prompt):
+  plink.exe -L 9943:localhost:9443 -C -N vpnuser@$SERVER_IP
+
+Then configure your Shadowsocks client to connect to:
+  Address: localhost
+  Port: 9943
+  Password: $SS_PASSWORD
+  Method: ${SS_METHOD:-chacha20-ietf-poly1305}
+
+
+What Your ISP Sees:
+-------------------
+✓ Normal SSH connection on port 22 (looks like server administration)
+✓ Cannot see VPN usage
+✓ Cannot see browsing activity
+
+
+To Stop Tunnel:
+---------------
+Linux/Mac:
+  pkill -f "ssh -D"
+  # or
+  pkill -f "ssh -L"
+
+Windows:
+  Close the PuTTY/plink window
+
+
+Full Setup Guide:
+-----------------
+See: SSH-TUNNEL-SETUP.md in the documentation
+EOF
+
 # Generate QR codes if qrencode available
 if command -v qrencode &> /dev/null; then
     echo "Generating QR codes..."
@@ -59,5 +139,16 @@ if command -v qrencode &> /dev/null; then
 fi
 
 echo ""
+echo "=========================================="
 echo "All configs generated in: $OUTPUT_DIR"
-echo "Share the .txt files or QR codes with clients"
+echo "=========================================="
+echo ""
+echo "Available connection methods:"
+echo "  1. vless.txt - Direct VLESS (fast)"
+echo "  2. vmess.txt - VMess over WebSocket"
+echo "  3. shadowsocks.txt - Shadowsocks (simple)"
+echo "  4. trojan.txt - Trojan (HTTPS-like)"
+echo "  5. ssh-tunnel.txt - SSH Tunnel (maximum stealth)"
+echo ""
+echo "For maximum stealth, use SSH tunnel!"
+echo "See ssh-tunnel.txt for commands"
