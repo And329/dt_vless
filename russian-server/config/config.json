@@ -1,0 +1,139 @@
+{
+  "log": {
+    "loglevel": "warning",
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log"
+  },
+  "inbounds": [
+    {
+      "port": ${VLESS_PORT},
+      "protocol": "vless",
+      "tag": "vless-in",
+      "settings": {
+        "clients": [
+          {
+            "id": "${VLESS_UUID}",
+            "level": 0,
+            "email": "user@vless"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "none",
+        "tcpSettings": {
+          "header": {
+            "type": "none"
+          }
+        }
+      }
+    },
+    {
+      "port": ${VMESS_PORT},
+      "protocol": "vmess",
+      "tag": "vmess-in",
+      "settings": {
+        "clients": [
+          {
+            "id": "${VMESS_UUID}",
+            "level": 0,
+            "alterId": 0,
+            "email": "user@vmess"
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/vmess"
+        }
+      }
+    },
+    {
+      "port": ${SS_PORT},
+      "protocol": "shadowsocks",
+      "tag": "shadowsocks-in",
+      "settings": {
+        "method": "${SS_METHOD}",
+        "password": "${SS_PASSWORD}",
+        "network": "tcp,udp"
+      }
+    },
+    {
+      "port": ${TROJAN_PORT},
+      "protocol": "trojan",
+      "tag": "trojan-in",
+      "settings": {
+        "clients": [
+          {
+            "password": "${TROJAN_PASSWORD}",
+            "level": 0,
+            "email": "user@trojan"
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "none"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "vless",
+      "tag": "eu-proxy",
+      "settings": {
+        "vnext": [
+          {
+            "address": "${EU_SERVER_ADDRESS}",
+            "port": ${EU_SERVER_PORT},
+            "users": [
+              {
+                "id": "${EU_SERVER_UUID}",
+                "encryption": "none",
+                "level": 0
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "none"
+      }
+    },
+    {
+      "protocol": "freedom",
+      "tag": "direct",
+      "settings": {}
+    },
+    {
+      "protocol": "blackhole",
+      "tag": "blocked",
+      "settings": {}
+    }
+  ],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": [
+          "vless-in",
+          "vmess-in",
+          "shadowsocks-in",
+          "trojan-in"
+        ],
+        "outboundTag": "eu-proxy"
+      },
+      {
+        "type": "field",
+        "ip": [
+          "geoip:private"
+        ],
+        "outboundTag": "blocked"
+      }
+    ]
+  }
+}

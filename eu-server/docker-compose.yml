@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  xray:
+    image: teddysun/xray:${XRAY_TAG:-latest}
+    container_name: eu-xray-server
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - VLESS_UUID=${VLESS_UUID}
+    volumes:
+      - ./config/config.json:/etc/xray/config.json:ro
+      - xray-logs:/var/log/xray
+    command: ["/bin/sh", "-c", "envsubst < /etc/xray/config.json > /tmp/config.json && xray run -c /tmp/config.json"]
+
+volumes:
+  xray-logs:

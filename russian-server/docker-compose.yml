@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  xray:
+    image: teddysun/xray:${XRAY_TAG:-latest}
+    container_name: russian-xray-server
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - VLESS_UUID=${VLESS_UUID}
+      - VLESS_PORT=${VLESS_PORT:-443}
+      - VMESS_UUID=${VMESS_UUID}
+      - VMESS_PORT=${VMESS_PORT:-8443}
+      - SS_PASSWORD=${SS_PASSWORD}
+      - SS_PORT=${SS_PORT:-9443}
+      - SS_METHOD=${SS_METHOD:-chacha20-ietf-poly1305}
+      - TROJAN_PASSWORD=${TROJAN_PASSWORD}
+      - TROJAN_PORT=${TROJAN_PORT:-10443}
+      - EU_SERVER_ADDRESS=${EU_SERVER_ADDRESS}
+      - EU_SERVER_PORT=${EU_SERVER_PORT:-443}
+      - EU_SERVER_UUID=${EU_SERVER_UUID}
+    volumes:
+      - ./config/config.json:/etc/xray/config.json:ro
+      - xray-logs:/var/log/xray
+    command: ["/bin/sh", "-c", "envsubst < /etc/xray/config.json > /tmp/config.json && xray run -c /tmp/config.json"]
+
+volumes:
+  xray-logs:

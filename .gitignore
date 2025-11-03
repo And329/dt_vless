@@ -1,0 +1,33 @@
+# Environment files with sensitive data
+.env
+*.env
+!.env.example
+
+# Backup files
+*.backup
+*.backup.*
+
+# Logs
+*.log
+logs/
+
+# Docker volumes
+volumes/
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generated configs
+/tmp/
+config.tmp.*

@@ -1,0 +1,11 @@
+{
+  "server": "YOUR_RUSSIAN_SERVER_IP",
+  "server_port": 9443,
+  "password": "YOUR_SS_PASSWORD",
+  "method": "chacha20-ietf-poly1305",
+  "local_address": "127.0.0.1",
+  "local_port": 1080,
+  "timeout": 300,
+  "fast_open": true,
+  "remarks": "Russian VPN - Shadowsocks"
+}
