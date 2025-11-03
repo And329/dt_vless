@@ -13,6 +13,7 @@ Russian Users → Russian Server (Control/Main) → EU Server → Internet
 1. **Russian Server (Control Server)**
    - Acts as the main entry point for Russian users
    - Accepts connections via multiple protocols (VLESS, VMess, Shadowsocks, Trojan)
+   - Optional SSH tunneling for additional obfuscation
    - Routes all traffic through EU server via VLESS outbound
    - Easily configurable to switch EU servers
 
@@ -25,6 +26,7 @@ Russian Users → Russian Server (Control/Main) → EU Server → Internet
 
 - **Easy EU Server Switching**: Change EU server configuration without rebuilding
 - **Multiple Inbound Protocols**: Support for VLESS, VMess, Shadowsocks, Trojan
+- **SSH Tunneling Support**: Optional SSH tunnel wrapping for maximum stealth
 - **Docker-based Deployment**: Easy setup and management
 - **Automatic Certificate Management**: TLS support for secure connections
 - **Configuration Management**: Environment-based configuration for easy updates

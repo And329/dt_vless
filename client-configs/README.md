@@ -8,6 +8,7 @@ These are example configurations for connecting to the Russian VPN server.
 2. **VMess** - `vmess-example.json`
 3. **Shadowsocks** - `shadowsocks-example.json`
 4. **Trojan** - See connection details below
+5. **SSH Tunnel** (Maximum Stealth) - See `../SSH-TUNNEL-SETUP.md`
 
 ## Setup Instructions
 
